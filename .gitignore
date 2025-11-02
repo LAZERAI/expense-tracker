@@ -1,1 +1,8 @@
 .vercel
+
+# Internal development documentation (keep local only)
+FIXES-SUMMARY.md
+GLOBAL-ASSESSMENT.md
+LAUNCH-ROADMAP.md
+POLISH-UPDATES.md
+TESTING-CHECKLIST.md
