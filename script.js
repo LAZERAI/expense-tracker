@@ -19,6 +19,7 @@ const filterCategory = document.getElementById('filter-category');
 const filterFrom = document.getElementById('filter-from');
 const filterTo = document.getElementById('filter-to');
 const filterSearch = document.getElementById('filter-search');
+const filterClearCategoryBtn = document.getElementById('filter-clear-category');
 
 const langSelect = document.getElementById('lang-select');
 const localeSelect = document.getElementById('locale-select');
@@ -658,7 +659,7 @@ function refreshCategorySuggestions() {
     let cats = [...new Set(tx.map(t => (t.category || '').trim()).filter(Boolean))].sort();
     // Seed with defaults when empty to help first-run UX
     if (cats.length === 0) {
-        cats = ['Food','Transport','Utilities','Entertainment','Healthcare','Shopping','Education','Travel','Rent','Salary','Freelance','Savings'];
+        cats = ['Food','Transport','Utilities','Entertainment','Healthcare','Shopping','Education','Travel','Rent','Salary','Freelance','Savings','Other'];
     }
     dl.innerHTML = cats.map(c => `<option value="${c}"></option>`).join('');
 }
@@ -737,10 +738,10 @@ function render() {
     sumIncomeEl.textContent = format(income);
     sumExpensesEl.textContent = format(-expenses);
     sumBalanceEl.textContent = format(income - expenses);
-    drawChart();
-    drawMonthlyChart?.();
-    renderBudgets?.();
-    renderCategoryColors?.();
+    try { if (window.Chart) { drawChart(); } } catch (e) { console.warn('drawChart failed', e); }
+    try { if (typeof drawMonthlyChart === 'function') { drawMonthlyChart(); } } catch (e) { console.warn('drawMonthlyChart failed', e); }
+    try { renderBudgets?.(); } catch (e) { console.warn('renderBudgets failed', e); }
+    try { renderCategoryColors?.(); } catch (e) { console.warn('renderCategoryColors failed', e); }
 }
 
 function escapeHtml(str) {
@@ -768,6 +769,13 @@ function drawChart() {
     tx.forEach(t => { if (t.type === 'expense') { byCat[t.category || 'Other'] = (byCat[t.category || 'Other']||0)+t.amount; }});
     const labels = Object.keys(byCat);
     const data = Object.values(byCat);
+    if (labels.length === 0) {
+        // Clear canvas and return early if no data
+        const g = ctx.getContext('2d');
+        g && g.clearRect(0,0,ctx.width,ctx.height);
+        if (chart) { chart.destroy(); chart = null; }
+        return;
+    }
     const bg = labels.map((label, i) => {
         const c = catColors[label];
         if (c) {
@@ -877,6 +885,7 @@ tbody.addEventListener('click', (e) => {
 });
 
 [filterType, filterCategory, filterFrom, filterTo, filterSearch].forEach(el => el.addEventListener('input', render));
+filterClearCategoryBtn?.addEventListener('click', () => { filterCategory.value = ''; render(); });
 
 langSelect.addEventListener('change', () => { applyI18n(); store.save(); });
 localeSelect?.addEventListener('change', () => { render(); store.save(); });
@@ -964,8 +973,10 @@ loadSampleBtn?.addEventListener('click', async () => {
         };
         store.save();
         applyI18n();
-        renderRecurring();
-        render();
+    renderRecurring();
+    render();
+    drawChart();
+    drawMonthlyChart?.();
         showToast('Sample data loaded');
     } catch (e) {
         console.warn('Failed to load sample data', e);

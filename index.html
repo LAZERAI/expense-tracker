@@ -245,7 +245,10 @@
                 </label>
                 <label>
                     <span data-i18n="filters.category">Category</span>
-                    <input list="category-suggestions" id="filter-category" placeholder="—" />
+                    <div style="display:flex; gap:.5rem; align-items:center;">
+                        <input list="category-suggestions" id="filter-category" placeholder="—" />
+                        <button type="button" id="filter-clear-category" class="btn" style="white-space:nowrap;">Clear</button>
+                    </div>
                 </label>
                 <label>
                     <span data-i18n="filters.from">From</span>
