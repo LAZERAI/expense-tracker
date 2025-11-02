@@ -1131,15 +1131,24 @@ recAddBtn?.addEventListener('click', () => {
 });
 
 recApplyBtn?.addEventListener('click', () => {
-    // Generate occurrences from rule.start up to today
+    // Generate occurrences from rule.start up to today (limited to last 90 days for performance)
     const todayDate = new Date();
     const todayStr = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()).toISOString().slice(0,10);
+    const ninetyDaysAgo = new Date(todayDate);
+    ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+    
     let added = 0;
     recurring.forEach(r => {
         if (!r.start) r.start = todayStr;
         let d = new Date(r.start);
         // normalize to start of day
         d = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+        
+        // Don't go back more than 90 days to prevent performance issues
+        if (d < ninetyDaysAgo) {
+            d = new Date(ninetyDaysAgo);
+        }
+        
         while (d <= todayDate) {
             const dateStr = d.toISOString().slice(0,10);
             // avoid duplicates
@@ -1158,8 +1167,10 @@ recApplyBtn?.addEventListener('click', () => {
             }
         }
     });
-    if (added === 0) {
-        // no-op
+    if (added > 0) {
+        showToast(`Added ${added} recurring transaction(s)`);
+    } else {
+        showToast('No new recurring transactions to add');
     }
 });
 
@@ -1413,5 +1424,43 @@ installBtn?.addEventListener('click', async () => {
 yearEl.textContent = new Date().getFullYear();
 store.load();
 applyI18n();
-render();
-renderRecurring?.();
+
+// Wait for Chart.js to load before rendering charts
+if (window.Chart) {
+    render();
+    renderRecurring?.();
+} else {
+    // Chart.js not loaded yet, render without charts and retry
+    render();
+    renderRecurring?.();
+    const checkChart = setInterval(() => {
+        if (window.Chart) {
+            clearInterval(checkChart);
+            drawChart();
+            drawMonthlyChart?.();
+        }
+    }, 100);
+    // Give up after 5 seconds
+    setTimeout(() => clearInterval(checkChart), 5000);
+}
+
+// Check localStorage quota and warn if nearly full
+function checkStorageQuota() {
+    if ('storage' in navigator && 'estimate' in navigator.storage) {
+        navigator.storage.estimate().then(estimate => {
+            const percentUsed = (estimate.usage / estimate.quota) * 100;
+            if (percentUsed > 80) {
+                const mb = (estimate.usage / 1048576).toFixed(2);
+                showToast(`Storage ${percentUsed.toFixed(0)}% full (${mb}MB). Consider exporting data.`, 'error');
+            }
+        });
+    }
+}
+
+// Check quota on load and after major operations
+checkStorageQuota();
+const originalSave = store.save;
+store.save = function() {
+    originalSave.call(store);
+    checkStorageQuota();
+};

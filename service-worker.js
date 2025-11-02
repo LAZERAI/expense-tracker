@@ -1,18 +1,60 @@
+const CACHE_VERSION = 'expense-tracker-v2';
+const CDN_CACHE = 'expense-tracker-cdn-v1';
+
+// Install: Cache app shell
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open('expense-tracker-v1').then(cache => cache.addAll([
-    './',
-    './index.html',
-    './styles.css',
-    './script.js',
-    'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js'
-  ])));
+  e.waitUntil(
+    caches.open(CACHE_VERSION).then(cache => cache.addAll([
+      './',
+      './index.html',
+      './styles.css',
+      './script.js',
+      './auth.js',
+      './manifest.webmanifest',
+      './ads.txt'
+    ]))
+  );
+  self.skipWaiting(); // Activate immediately
 });
 
+// Activate: Clean old caches
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    caches.keys().then(keys => Promise.all(
+      keys.filter(key => key !== CACHE_VERSION && key !== CDN_CACHE)
+        .map(key => caches.delete(key))
+    ))
+  );
+  self.clients.claim();
+});
+
+// Fetch: Stale-while-revalidate for CDN, cache-first for app
 self.addEventListener('fetch', (e) => {
+  const url = new URL(e.request.url);
+  
+  // CDN assets: stale-while-revalidate
+  if (url.hostname.includes('cdn.jsdelivr.net') || url.hostname.includes('gstatic.com')) {
+    e.respondWith(
+      caches.open(CDN_CACHE).then(cache => 
+        cache.match(e.request).then(cached => {
+          const fetchPromise = fetch(e.request).then(response => {
+            cache.put(e.request, response.clone());
+            return response;
+          }).catch(() => cached);
+          return cached || fetchPromise;
+        })
+      )
+    );
+    return;
+  }
+
+  // App assets: cache-first with network fallback
   e.respondWith(
     caches.match(e.request).then(resp => resp || fetch(e.request).then(r => {
-      const copy = r.clone();
-      caches.open('expense-tracker-v1').then(cache => cache.put(e.request, copy));
+      if (r.ok && e.request.method === 'GET') {
+        const copy = r.clone();
+        caches.open(CACHE_VERSION).then(cache => cache.put(e.request, copy));
+      }
       return r;
     }).catch(() => caches.match('./index.html')))
   );
