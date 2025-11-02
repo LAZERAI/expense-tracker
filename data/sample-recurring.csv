@@ -1,0 +1,4 @@
+id,name,amount,type,category,frequency,start
+r1,Streaming Subscription,15,expense,Entertainment,monthly,2025-01-10
+r2,Internet,40,expense,Utilities,monthly,2025-01-05
+r3,Savings Transfer,200,expense,Savings,monthly,2025-01-20

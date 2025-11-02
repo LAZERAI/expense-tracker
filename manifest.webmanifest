@@ -1,0 +1,15 @@
+{
+  "name": "Expense Tracker",
+  "short_name": "Expenses",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f7f8fb",
+  "theme_color": "#2f67f6",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='50%' x='50%' dy='.35em' text-anchor='middle' font-size='48'>💸</text></svg>",
+      "sizes": "64x64",
+      "type": "image/svg+xml"
+    }
+  ]
+}

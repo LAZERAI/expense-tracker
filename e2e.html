@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Expense Tracker E2E</title>
+  <style>
+    body { font-family: ui-sans-serif, system-ui; padding: 16px; }
+    .pass { color: green; }
+    .fail { color: red; }
+  </style>
+</head>
+<body>
+  <h1>E2E Tests</h1>
+  <ol id="results"></ol>
+
+  <iframe id="app" src="./index.html" style="width:100%;height:600px;border:1px solid #ccc"></iframe>
+
+  <script>
+    const results = document.getElementById('results');
+    function log(ok, msg) {
+      const li = document.createElement('li');
+      li.textContent = (ok ? '✓ ' : '✗ ') + msg;
+      li.className = ok ? 'pass' : 'fail';
+      results.appendChild(li);
+    }
+    const app = document.getElementById('app');
+    app.addEventListener('load', async () => {
+      const w = app.contentWindow;
+      try {
+        // Add one income
+        w.document.getElementById('tx-type').value = 'income';
+        w.document.getElementById('expense-name').value = 'Salary';
+        w.document.getElementById('expense-amount').value = '1000';
+        w.document.getElementById('expense-form').dispatchEvent(new w.Event('submit', { cancelable: true, bubbles: true }));
+        await new Promise(r=>setTimeout(r,100));
+        const incomeText = w.document.getElementById('sum-income').textContent;
+        log(incomeText.includes('1000') || incomeText.includes('1,000'), 'Added income updates summary');
+
+        // Add one expense
+        w.document.getElementById('tx-type').value = 'expense';
+        w.document.getElementById('expense-name').value = 'Groceries';
+        w.document.getElementById('expense-amount').value = '200';
+        w.document.getElementById('expense-form').dispatchEvent(new w.Event('submit', { cancelable: true, bubbles: true }));
+        await new Promise(r=>setTimeout(r,100));
+        const tbody = w.document.getElementById('tx-tbody');
+        log(tbody.children.length >= 2, 'Table renders rows');
+
+        // Export CSV
+        const btn = w.document.getElementById('btn-export');
+        log(!!btn, 'Export button exists');
+      } catch (e) {
+        log(false, 'Exception: ' + e.message);
+      }
+    });
+  </script>
+</body>
+</html>

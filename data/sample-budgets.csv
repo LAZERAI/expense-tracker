@@ -1,0 +1,8 @@
+type,category,amount
+total,,2500
+category,Food,400
+category,Transport,200
+category,Utilities,200
+category,Entertainment,150
+category,Savings,300
+category,Shopping,250

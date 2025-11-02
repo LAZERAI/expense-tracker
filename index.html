@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-i18n="app.title">Expense Tracker</title>
+    <meta name="description" content="Track expenses and income with categories, filters, charts, multi-language and currency support." />
+    <link rel="stylesheet" href="styles.css" />
+    <meta name="theme-color" content="#0b1020" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <meta name="google-adsense-account" content="ca-pub-3043513870332414" />
+    <!-- AdSense site verification: keep this in head on all pages -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3043513870332414" crossorigin="anonymous"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234c7bf7' stroke-width='2'><path d='M21 12V7H5a2 2 0 0 1 0-4h14v4M3 5v14a2 2 0 0 0 2 2h16v-5M18 12a2 2 0 0 0 0 4h4v-4Z'/></svg>">
+</head>
+<body>
+    <!-- Inline SVG Icons -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="icon-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path>
+            <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path>
+            <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path>
+        </symbol>
+        <symbol id="icon-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+        </symbol>
+        <symbol id="icon-coffee" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+            <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+            <line x1="6" y1="1" x2="6" y2="4"></line>
+            <line x1="10" y1="1" x2="10" y2="4"></line>
+            <line x1="14" y1="1" x2="14" y2="4"></line>
+        </symbol>
+        <symbol id="icon-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+        </symbol>
+        <symbol id="icon-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+        </symbol>
+        <symbol id="icon-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        </symbol>
+        <symbol id="icon-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+        </symbol>
+        <symbol id="icon-repeat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="17 1 21 5 17 9"></polyline>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+            <polyline points="7 23 3 19 7 15"></polyline>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+        </symbol>
+        <symbol id="icon-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <circle cx="12" cy="12" r="6"></circle>
+            <circle cx="12" cy="12" r="2"></circle>
+        </symbol>
+        <symbol id="icon-palette" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="13.5" cy="6.5" r=".5"></circle>
+            <circle cx="17.5" cy="10.5" r=".5"></circle>
+            <circle cx="8.5" cy="7.5" r=".5"></circle>
+            <circle cx="6.5" cy="12.5" r=".5"></circle>
+            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
+        </symbol>
+        <symbol id="icon-github" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.840 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.430.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+        </symbol>
+        <symbol id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </symbol>
+        <symbol id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </symbol>
+        <symbol id="icon-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </symbol>
+        <symbol id="icon-google" viewBox="0 0 24 24">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </symbol>
+    </svg>
+
+    <header class="app-header" role="banner">
+        <div class="brand">
+            <svg class="icon icon-xl" aria-hidden="true"><use xlink:href="#icon-wallet"/></svg>
+            <h1 class="title" data-i18n="app.title">Expense Tracker</h1>
+        </div>
+            <div class="controls" role="group" aria-label="App controls">
+                <label class="control">
+                    <span data-i18n="controls.locale">Locale</span>
+                    <select id="locale-select" aria-label="Locale">
+                        <option value="auto">Auto</option>
+                        <option value="en-US">English (US)</option>
+                        <option value="en-GB">English (UK)</option>
+                        <option value="es-ES">Español (ES)</option>
+                        <option value="fr-FR">Français (FR)</option>
+                        <option value="de-DE">Deutsch</option>
+                        <option value="pt-BR">Português (BR)</option>
+                        <option value="hi-IN">हिन्दी (IN)</option>
+                    </select>
+                </label>
+            <label class="control">
+                <span data-i18n="controls.language">Language</span>
+                <select id="lang-select" aria-label="Language">
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                    <option value="de">Deutsch</option>
+                    <option value="pt">Português (BR)</option>
+                    <option value="hi">हिन्दी</option>
+                </select>
+            </label>
+            <label class="control">
+                <span data-i18n="controls.currency">Currency</span>
+                <select id="currency-select" aria-label="Currency">
+                    <option value="USD">USD $</option>
+                    <option value="EUR">EUR €</option>
+                    <option value="GBP">GBP £</option>
+                    <option value="JPY">JPY ¥</option>
+                    <option value="INR">INR ₹</option>
+                    <option value="NGN">NGN ₦</option>
+                    <option value="AUD">AUD $</option>
+                    <option value="CAD">CAD $</option>
+                </select>
+            </label>
+            <button id="theme-toggle-btn" title="Toggle theme" aria-label="Toggle theme">
+                <svg class="theme-icon-moon"><use xlink:href="#icon-moon"/></svg>
+                <svg class="theme-icon-sun"><use xlink:href="#icon-sun"/></svg>
+            </button>
+            <div class="control-row">
+                    <button id="btn-export" class="btn btn-with-icon" aria-keyshortcuts="E">
+                        <svg class="icon"><use xlink:href="#icon-download"/></svg>
+                        <span>Export CSV</span>
+                    </button>
+                    <button id="btn-load-sample" class="btn btn-with-icon" title="Load Sample Data">
+                        <svg class="icon"><use xlink:href="#icon-upload"/></svg>
+                        <span>Load Sample</span>
+                    </button>
+                    <label class="btn file btn-with-icon">
+                        <input type="file" id="file-import" accept=".csv" aria-label="Import CSV" />
+                        <svg class="icon"><use xlink:href="#icon-upload"/></svg>
+                        <span>Import CSV</span>
+                    </label>
+                    <button id="btn-clear" class="btn danger btn-with-icon" aria-keyshortcuts="Ctrl+Backspace">
+                        <svg class="icon"><use xlink:href="#icon-trash"/></svg>
+                        <span>Clear All</span>
+                    </button>
+                    <button id="btn-profile" class="btn btn-with-icon" aria-haspopup="dialog" aria-controls="auth-dialog">
+                        <svg class="icon"><use xlink:href="#icon-user"/></svg>
+                        <span>Profile</span>
+                    </button>
+                    <button id="install-btn" class="btn btn-with-icon" style="display:none">
+                        <svg class="icon"><use xlink:href="#icon-download"/></svg>
+                        <span>Install App</span>
+                    </button>
+                </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="cards">
+            <div class="card">
+                <div class="card-label" data-i18n="summary.income">Income</div>
+                <div class="card-value" id="sum-income">0</div>
+            </div>
+            <div class="card">
+                <div class="card-label" data-i18n="summary.expenses">Expenses</div>
+                <div class="card-value" id="sum-expenses">0</div>
+            </div>
+            <div class="card">
+                <div class="card-label" data-i18n="summary.balance">Balance</div>
+                <div class="card-value" id="sum-balance">0</div>
+            </div>
+        </section>
+
+            <section class="panel" aria-labelledby="add-title">
+                <h2 id="add-title" data-i18n="form.title">Add Transaction</h2>
+            <form id="expense-form" autocomplete="off">
+                <div class="grid">
+                    <label>
+                        <span data-i18n="form.type">Type</span>
+                        <select id="tx-type" required>
+                            <option value="expense" data-i18n="form.type.expense">Expense</option>
+                            <option value="income" data-i18n="form.type.income">Income</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span data-i18n="form.name">Name</span>
+                        <input type="text" id="expense-name" placeholder="e.g., Groceries" required />
+                    </label>
+                    <label>
+                        <span data-i18n="form.amount">Amount</span>
+                        <input type="number" id="expense-amount" min="0" step="0.01" placeholder="0.00" required />
+                    </label>
+                    <label>
+                        <span data-i18n="form.category">Category</span>
+                        <input list="category-suggestions" id="expense-category" placeholder="e.g., Food" />
+                        <datalist id="category-suggestions"></datalist>
+                    </label>
+                    <label>
+                        <span data-i18n="form.date">Date</span>
+                        <input type="date" id="expense-date" />
+                    </label>
+                    <label class="full">
+                        <span data-i18n="form.notes">Notes</span>
+                        <input type="text" id="expense-notes" placeholder="Optional" />
+                    </label>
+                </div>
+                <div class="actions">
+                    <button type="submit" id="submit-btn" class="btn primary" data-i18n="form.add">Add</button>
+                    <button type="button" id="reset-btn" class="btn" data-i18n="form.reset">Reset</button>
+                </div>
+            </form>
+        </section>
+
+            <section class="panel" aria-labelledby="filters-title">
+                <h2 id="filters-title" data-i18n="filters.title">Filters</h2>
+            <div class="grid">
+                <label>
+                    <span data-i18n="filters.type">Type</span>
+                    <select id="filter-type">
+                        <option value="all" data-i18n="filters.type.all">All</option>
+                        <option value="expense" data-i18n="form.type.expense">Expense</option>
+                        <option value="income" data-i18n="form.type.income">Income</option>
+                    </select>
+                </label>
+                <label>
+                    <span data-i18n="filters.category">Category</span>
+                    <input list="category-suggestions" id="filter-category" placeholder="—" />
+                </label>
+                <label>
+                    <span data-i18n="filters.from">From</span>
+                    <input type="date" id="filter-from" />
+                </label>
+                <label>
+                    <span data-i18n="filters.to">To</span>
+                    <input type="date" id="filter-to" />
+                </label>
+                <label class="full">
+                    <span data-i18n="filters.search">Search</span>
+                    <input type="search" id="filter-search" placeholder="name or notes" />
+                </label>
+            </div>
+        </section>
+
+            <section class="panel" aria-labelledby="list-title">
+                <h2 id="list-title" data-i18n="list.title">Transactions</h2>
+            <div class="table-wrap">
+                    <table class="table" aria-describedby="sum-balance">
+                    <thead>
+                        <tr>
+                            <th data-i18n="list.date">Date</th>
+                            <th data-i18n="list.type">Type</th>
+                            <th data-i18n="list.category">Category</th>
+                            <th data-i18n="list.name">Name</th>
+                            <th class="num" data-i18n="list.amount">Amount</th>
+                            <th data-i18n="list.actions">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tx-tbody">
+                        <!-- rows injected by JS -->
+                    </tbody>
+                        <caption class="sr-only" id="tx-caption">Transactions table</caption>
+                </table>
+            </div>
+        </section>
+
+            <section class="panel" aria-labelledby="chart-cat-title">
+                <h2 id="chart-cat-title" data-i18n="chart.title">Spending by Category</h2>
+                <canvas id="chart" height="120" role="img" aria-label="Spending by category"></canvas>
+        </section>
+
+            <section class="panel" aria-labelledby="chart-month-title">
+                <h2 id="chart-month-title" data-i18n="chart.monthly">Monthly Totals</h2>
+                <div class="grid">
+                    <label>
+                        <span data-i18n="chart.month.select">Months</span>
+                        <input type="number" id="months-back" min="3" max="24" value="12" />
+                    </label>
+                </div>
+                <canvas id="chart-month" height="120" role="img" aria-label="Monthly totals"></canvas>
+            </section>
+
+                <section class="panel" aria-labelledby="catcolors-title">
+                    <h2 id="catcolors-title" data-i18n="colors.title">Category Colors</h2>
+                    <div id="cat-colors" class="grid"></div>
+                </section>
+
+            <section class="panel" aria-labelledby="budget-title">
+                <h2 id="budget-title" data-i18n="budget.title">Monthly Budget</h2>
+                <div class="grid">
+                    <label>
+                        <span data-i18n="budget.total">Total Budget</span>
+                        <input type="number" id="budget-total" min="0" step="0.01" placeholder="0.00" />
+                    </label>
+                    <label>
+                        <span data-i18n="budget.category">Category Budget</span>
+                        <input type="text" id="budget-cat-name" placeholder="e.g., Food" />
+                    </label>
+                    <label>
+                        <span data-i18n="budget.amount">Amount</span>
+                        <input type="number" id="budget-cat-amount" min="0" step="0.01" placeholder="0.00" />
+                    </label>
+                    <div class="actions">
+                        <button class="btn" id="budget-save" data-i18n="budget.save">Save Budget</button>
+                        <button class="btn" id="budget-clear" data-i18n="budget.clear">Clear Budgets</button>
+                        <button class="btn" id="budget-export">Export Budgets CSV</button>
+                        <label class="btn file"><input type="file" id="budget-import" accept=".csv" /> <span>Import Budgets CSV</span></label>
+                    </div>
+                </div>
+                <div id="budget-progress"></div>
+            </section>
+
+            <section class="panel" aria-labelledby="recurring-title">
+                <h2 id="recurring-title" data-i18n="recurring.title">Recurring Transactions</h2>
+                <div class="grid">
+                    <label>
+                        <span data-i18n="recurring.name">Name</span>
+                        <input type="text" id="rec-name" />
+                    </label>
+                    <label>
+                        <span data-i18n="recurring.amount">Amount</span>
+                        <input type="number" id="rec-amount" min="0" step="0.01" />
+                    </label>
+                    <label>
+                        <span data-i18n="recurring.type">Type</span>
+                        <select id="rec-type">
+                            <option value="expense" data-i18n="form.type.expense">Expense</option>
+                            <option value="income" data-i18n="form.type.income">Income</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span data-i18n="recurring.category">Category</span>
+                        <input type="text" id="rec-category" />
+                    </label>
+                    <label>
+                        <span data-i18n="recurring.frequency">Frequency</span>
+                        <select id="rec-frequency">
+                            <option value="monthly" data-i18n="recurring.monthly">Monthly</option>
+                            <option value="weekly" data-i18n="recurring.weekly">Weekly</option>
+                            <option value="daily" data-i18n="recurring.daily">Daily</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span data-i18n="recurring.start">Start Date</span>
+                        <input type="date" id="rec-start" />
+                    </label>
+                </div>
+                <div class="actions">
+                    <button class="btn" id="rec-add" data-i18n="recurring.add">Add Rule</button>
+                    <button class="btn" id="rec-apply" data-i18n="recurring.apply">Apply Now</button>
+                    <button class="btn" id="rec-export">Export Recurring CSV</button>
+                    <label class="btn file"><input type="file" id="rec-import" accept=".csv" /> <span>Import Recurring CSV</span></label>
+                </div>
+                <ul id="rec-list"></ul>
+            </section>
+    </main>
+
+    <footer class="app-footer">
+        <div>© <span id="year"></span> <span data-i18n="app.title">Expense Tracker</span> • 
+            <a class="gh-link" href="https://github.com/LAZERAI" target="_blank" rel="noopener">
+                <svg class="icon icon-sm"><use xlink:href="#icon-github"/></svg> GitHub
+            </a>
+        </div>
+    </footer>
+
+        <div id="live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+        <!-- Profile Dialog -->
+        <dialog id="auth-dialog" aria-label="Profile" class="profile-dialog">
+            <form method="dialog" id="auth-form">
+                <div class="dialog-header">
+                    <svg class="icon icon-lg"><use xlink:href="#icon-users"/></svg>
+                    <h3 data-i18n="auth.title">Profile Management</h3>
+                </div>
+                <div id="auth-user" class="auth-status"></div>
+                
+                <!-- Local Profiles Section -->
+                <div class="profile-section">
+                    <h4 data-i18n="auth.local.title">Local Profiles</h4>
+                    <p class="section-desc" data-i18n="auth.local.desc">Manage multiple profiles on this device</p>
+                    
+                    <div class="form-group">
+                        <label>
+                            <span class="label-text" data-i18n="auth.local.current">Current Profile</span>
+                            <select id="profile-select"></select>
+                        </label>
+                    </div>
+                    
+                    <div class="form-divider">
+                        <span data-i18n="auth.local.orcreate">or create new</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <span class="label-text" data-i18n="auth.new">Profile Name</span>
+                            <input type="text" id="profile-new" placeholder="e.g., Personal, Work, Family" aria-label="New profile name" />
+                        </label>
+                        <button class="btn primary" id="profile-create">
+                            <svg class="icon icon-sm"><use xlink:href="#icon-user"/></svg>
+                            <span data-i18n="auth.create">Create Profile</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Cloud Sign-In Section -->
+                <div class="profile-section">
+                    <h4 data-i18n="auth.cloud.title">Cloud Sync</h4>
+                    <p class="section-desc" data-i18n="auth.cloud.desc">Sign in to sync your data across devices</p>
+                    <div class="actions">
+                        <button id="btn-google-signin" type="button">
+                            <svg class="icon"><use xlink:href="#icon-google"/></svg>
+                            <span data-i18n="auth.cloud.signin">Sign in with Google</span>
+                        </button>
+                        <button class="btn btn-with-icon" id="btn-signout" type="button">
+                            <svg class="icon icon-sm"><use xlink:href="#icon-user"/></svg>
+                            <span data-i18n="auth.cloud.signout">Sign out</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn" id="profile-close" data-i18n="auth.close">Close</button>
+                </div>
+            </form>
+        </dialog>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" integrity="sha384-wO0zq9Rr4A4+Fx3+V9V1l1vLtv6LclG5xZ3lbqAiE3Wb9m8iISbKzq0k8SNHqkQZ" crossorigin="anonymous"></script>
+    <script type="module" src="auth.js"></script>
+    <script src="script.js"></script>
+        <script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+                });
+            }
+        </script>
+
+    <!-- Floating Support Button -->
+    <a class="support-fab" href="https://www.buymeacoffee.com/lazerai" target="_blank" rel="noopener" aria-label="Support via Buy Me a Coffee">
+        <svg class="icon icon-lg"><use xlink:href="#icon-coffee"/></svg>
+    </a>
+</body>
+</html>
