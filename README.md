@@ -2,8 +2,11 @@
 
 > A modern, privacy-focused expense tracker that runs entirely in your browser. No backend, no sign-up required, your data stays with you.
 
+🔗 **[Live Demo](https://lazerai-expense.vercel.app)** | 📱 **[Install as PWA](https://lazerai-expense.vercel.app)**
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![PWA](https://img.shields.io/badge/PWA-enabled-brightgreen.svg)](https://web.dev/progressive-web-apps/)
+[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black.svg)](https://lazerai-expense.vercel.app)
 
 ## ✨ Features
 
