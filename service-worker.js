@@ -1,20 +1,28 @@
-const CACHE_VERSION = 'expense-tracker-v2';
-const CDN_CACHE = 'expense-tracker-cdn-v1';
+const CACHE_VERSION = 'expense-tracker-v3';
+const CDN_CACHE = 'expense-tracker-cdn-v2';
 
 // Install: Cache app shell
 self.addEventListener('install', (e) => {
+  console.log('[SW] Installing...');
   e.waitUntil(
-    caches.open(CACHE_VERSION).then(cache => cache.addAll([
-      './',
-      './index.html',
-      './styles.css',
-      './script.js',
-      './auth.js',
-      './manifest.webmanifest',
-      './ads.txt'
-    ]))
+    caches.open(CACHE_VERSION).then(cache => {
+      console.log('[SW] Caching app shell');
+      return cache.addAll([
+        '/',
+        '/index.html',
+        '/styles.css',
+        '/script.js',
+        '/auth.js',
+        '/icons.svg',
+        '/manifest.webmanifest'
+      ]);
+    }).then(() => {
+      console.log('[SW] Install complete');
+      self.skipWaiting(); // Activate immediately
+    }).catch(err => {
+      console.error('[SW] Install failed:', err);
+    })
   );
-  self.skipWaiting(); // Activate immediately
 });
 
 // Activate: Clean old caches

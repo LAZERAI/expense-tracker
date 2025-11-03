@@ -1,15 +1,54 @@
 {
   "name": "Expense Tracker",
   "short_name": "Expenses",
-  "start_url": ".",
+  "description": "Track your income and expenses with budgets, charts, and recurring transactions",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#f7f8fb",
+  "background_color": "#0a0e27",
   "theme_color": "#2f67f6",
+  "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='50%' x='50%' dy='.35em' text-anchor='middle' font-size='48'>💸</text></svg>",
-      "sizes": "64x64",
-      "type": "image/svg+xml"
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%232f67f6' rx='32'/%3E%3Ctext y='50%25' x='50%25' dy='.35em' text-anchor='middle' font-size='96' fill='white'%3E💸%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%232f67f6' rx='96'/%3E%3Ctext y='50%25' x='50%25' dy='.35em' text-anchor='middle' font-size='256' fill='white'%3E💸%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Add Expense",
+      "short_name": "Add",
+      "description": "Quickly add a new expense",
+      "url": "/?add=expense",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Ctext y='50%25' x='50%25' dy='.35em' text-anchor='middle' font-size='64'%3E➕%3C/text%3E%3C/svg%3E",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "View Charts",
+      "short_name": "Charts",
+      "description": "View spending analytics",
+      "url": "/?view=charts",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Ctext y='50%25' x='50%25' dy='.35em' text-anchor='middle' font-size='64'%3E📊%3C/text%3E%3C/svg%3E",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
     }
   ]
 }
