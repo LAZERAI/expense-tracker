@@ -455,13 +455,13 @@
             </form>
         </dialog>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" integrity="sha384-wO0zq9Rr4A4+Fx3+V9V1l1vLtv6LclG5xZ3lbqAiE3Wb9m8iISbKzq0k8SNHqkQZ" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" crossorigin="anonymous"></script>
     <script type="module" src="auth.js"></script>
     <script src="script.js"></script>
         <script>
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+                    navigator.serviceWorker.register('/service-worker.js').catch(() => {});
                 });
             }
         </script>
