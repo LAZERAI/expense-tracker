@@ -41,7 +41,7 @@ let auth, provider;
         try { window.loadProfile && window.loadProfile(user.uid); } catch {}
       } else {
         authUserEl.className = 'auth-status signed-out';
-        authUserEl.textContent = '○ Not signed in (local storage only)';
+        authUserEl.textContent = '○ Not signed in — data stored locally';
       }
     });
 

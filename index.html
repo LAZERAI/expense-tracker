@@ -4,7 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title data-i18n="app.title">Expense Tracker</title>
-    <meta name="description" content="Track expenses and income with categories, filters, charts, multi-language and currency support. Free, offline-capable PWA." />
+    <meta name="description" content="Track expenses and income with categories, budgets, charts, and CSV export. Free, offline-capable, no sign-up needed." />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Expense Tracker" />
+    <meta property="og:description" content="Track expenses and income with categories, budgets, charts, and CSV export. Free, offline-capable, no sign-up needed." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://et-lazerai.vercel.app/" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Expense Tracker" />
+    <meta name="twitter:description" content="Track expenses and income with categories, budgets, charts, and CSV export. Free, offline-capable, no sign-up needed." />
+    
     <link rel="stylesheet" href="styles.css" />
     
     <!-- PWA Meta Tags -->
@@ -112,7 +122,26 @@
             <svg class="icon icon-xl" aria-hidden="true"><use xlink:href="#icon-wallet"/></svg>
             <h1 class="title" data-i18n="app.title">Expense Tracker</h1>
         </div>
-            <div class="controls" role="group" aria-label="App controls">
+        <div class="header-actions">
+            <button id="theme-toggle-btn" title="Toggle theme" aria-label="Toggle theme">
+                <svg class="theme-icon-moon"><use xlink:href="#icon-moon"/></svg>
+                <svg class="theme-icon-sun"><use xlink:href="#icon-sun"/></svg>
+            </button>
+            <button id="btn-profile" class="btn btn-with-icon" aria-haspopup="dialog" aria-controls="auth-dialog">
+                <svg class="icon"><use xlink:href="#icon-user"/></svg>
+                <span>Profile</span>
+            </button>
+            <button id="btn-settings-toggle" class="btn btn-with-icon" aria-expanded="false" aria-controls="settings-drawer">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+                <span>Menu</span>
+            </button>
+        </div>
+    </header>
+
+    <div id="settings-drawer" class="settings-drawer" hidden>
+        <div class="settings-grid">
+            <div class="settings-group">
+                <h3>Display</h3>
                 <label class="control">
                     <span data-i18n="controls.locale">Locale</span>
                     <select id="locale-select" aria-label="Locale">
@@ -126,35 +155,34 @@
                         <option value="hi-IN">हिन्दी (IN)</option>
                     </select>
                 </label>
-            <label class="control">
-                <span data-i18n="controls.language">Language</span>
-                <select id="lang-select" aria-label="Language">
-                    <option value="en">English</option>
-                    <option value="es">Español</option>
-                    <option value="fr">Français</option>
-                    <option value="de">Deutsch</option>
-                    <option value="pt">Português (BR)</option>
-                    <option value="hi">हिन्दी</option>
-                </select>
-            </label>
-            <label class="control">
-                <span data-i18n="controls.currency">Currency</span>
-                <select id="currency-select" aria-label="Currency">
-                    <option value="USD">USD $</option>
-                    <option value="EUR">EUR €</option>
-                    <option value="GBP">GBP £</option>
-                    <option value="JPY">JPY ¥</option>
-                    <option value="INR">INR ₹</option>
-                    <option value="NGN">NGN ₦</option>
-                    <option value="AUD">AUD $</option>
-                    <option value="CAD">CAD $</option>
-                </select>
-            </label>
-            <button id="theme-toggle-btn" title="Toggle theme" aria-label="Toggle theme">
-                <svg class="theme-icon-moon"><use xlink:href="#icon-moon"/></svg>
-                <svg class="theme-icon-sun"><use xlink:href="#icon-sun"/></svg>
-            </button>
-            <div class="control-row">
+                <label class="control">
+                    <span data-i18n="controls.language">Language</span>
+                    <select id="lang-select" aria-label="Language">
+                        <option value="en">English</option>
+                        <option value="es">Español</option>
+                        <option value="fr">Français</option>
+                        <option value="de">Deutsch</option>
+                        <option value="pt">Português (BR)</option>
+                        <option value="hi">हिन्दी</option>
+                    </select>
+                </label>
+                <label class="control">
+                    <span data-i18n="controls.currency">Currency</span>
+                    <select id="currency-select" aria-label="Currency">
+                        <option value="USD">USD $</option>
+                        <option value="EUR">EUR €</option>
+                        <option value="GBP">GBP £</option>
+                        <option value="JPY">JPY ¥</option>
+                        <option value="INR">INR ₹</option>
+                        <option value="NGN">NGN ₦</option>
+                        <option value="AUD">AUD $</option>
+                        <option value="CAD">CAD $</option>
+                    </select>
+                </label>
+            </div>
+            <div class="settings-group">
+                <h3>Data</h3>
+                <div class="control-row">
                     <button id="btn-export" class="btn btn-with-icon" aria-keyshortcuts="E">
                         <svg class="icon"><use xlink:href="#icon-download"/></svg>
                         <span>Export CSV</span>
@@ -172,31 +200,31 @@
                         <svg class="icon"><use xlink:href="#icon-trash"/></svg>
                         <span>Clear All</span>
                     </button>
-                    <button id="btn-profile" class="btn btn-with-icon" aria-haspopup="dialog" aria-controls="auth-dialog">
-                        <svg class="icon"><use xlink:href="#icon-user"/></svg>
-                        <span>Profile</span>
-                    </button>
                     <button id="install-btn" class="btn btn-with-icon" style="display:none">
                         <svg class="icon"><use xlink:href="#icon-download"/></svg>
                         <span>Install App</span>
                     </button>
                 </div>
+            </div>
         </div>
-    </header>
+    </div>
 
     <main class="container">
         <section class="cards">
             <div class="card">
                 <div class="card-label" data-i18n="summary.income">Income</div>
                 <div class="card-value" id="sum-income">0</div>
+                <div class="card-trend" id="trend-income"></div>
             </div>
             <div class="card">
                 <div class="card-label" data-i18n="summary.expenses">Expenses</div>
                 <div class="card-value" id="sum-expenses">0</div>
+                <div class="card-trend" id="trend-expenses"></div>
             </div>
             <div class="card">
                 <div class="card-label" data-i18n="summary.balance">Balance</div>
                 <div class="card-value" id="sum-balance">0</div>
+                <div class="card-trend" id="trend-balance"></div>
             </div>
         </section>
 
@@ -274,34 +302,42 @@
         </section>
 
             <section class="panel" aria-labelledby="list-title">
-                <h2 id="list-title" data-i18n="list.title">Transactions</h2>
+                <div class="panel-header">
+                    <h2 id="list-title" data-i18n="list.title">Transactions</h2>
+                    <span id="tx-count" class="tx-count"></span>
+                </div>
             <div class="table-wrap">
                     <table class="table" aria-describedby="sum-balance">
+                        <caption class="sr-only" id="tx-caption">Transactions table</caption>
                     <thead>
                         <tr>
-                            <th data-i18n="list.date">Date</th>
-                            <th data-i18n="list.type">Type</th>
-                            <th data-i18n="list.category">Category</th>
-                            <th data-i18n="list.name">Name</th>
-                            <th class="num" data-i18n="list.amount">Amount</th>
+                            <th class="sortable" data-sort="date" data-i18n="list.date">Date</th>
+                            <th class="sortable" data-sort="type" data-i18n="list.type">Type</th>
+                            <th class="sortable" data-sort="category" data-i18n="list.category">Category</th>
+                            <th class="sortable" data-sort="name" data-i18n="list.name">Name</th>
+                            <th class="sortable num" data-sort="amount" data-i18n="list.amount">Amount</th>
                             <th data-i18n="list.actions">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="tx-tbody">
                         <!-- rows injected by JS -->
                     </tbody>
-                        <caption class="sr-only" id="tx-caption">Transactions table</caption>
                 </table>
+            </div>
+            <div id="pagination" class="pagination" hidden>
+                <button id="page-prev" class="btn pagination-btn" disabled>&laquo; Prev</button>
+                <span id="page-info" class="page-info"></span>
+                <button id="page-next" class="btn pagination-btn">Next &raquo;</button>
             </div>
         </section>
 
-            <section class="panel" aria-labelledby="chart-cat-title">
-                <h2 id="chart-cat-title" data-i18n="chart.title">Spending by Category</h2>
+        <details class="panel" open>
+            <summary><h2 id="chart-cat-title" data-i18n="chart.title">Spending by Category</h2></summary>
                 <canvas id="chart" height="120" role="img" aria-label="Spending by category"></canvas>
-        </section>
+        </details>
 
-            <section class="panel" aria-labelledby="chart-month-title">
-                <h2 id="chart-month-title" data-i18n="chart.monthly">Monthly Totals</h2>
+        <details class="panel" open>
+            <summary><h2 id="chart-month-title" data-i18n="chart.monthly">Monthly Totals</h2></summary>
                 <div class="grid">
                     <label>
                         <span data-i18n="chart.month.select">Months</span>
@@ -309,15 +345,15 @@
                     </label>
                 </div>
                 <canvas id="chart-month" height="120" role="img" aria-label="Monthly totals"></canvas>
-            </section>
+            </details>
 
-                <section class="panel" aria-labelledby="catcolors-title">
-                    <h2 id="catcolors-title" data-i18n="colors.title">Category Colors</h2>
+                <details class="panel">
+                    <summary><h2 id="catcolors-title" data-i18n="colors.title">Category Colors</h2></summary>
                     <div id="cat-colors" class="grid"></div>
-                </section>
+                </details>
 
-            <section class="panel" aria-labelledby="budget-title">
-                <h2 id="budget-title" data-i18n="budget.title">Monthly Budget</h2>
+            <details class="panel">
+                <summary><h2 id="budget-title" data-i18n="budget.title">Monthly Budget</h2></summary>
                 <div class="grid">
                     <label>
                         <span data-i18n="budget.total">Total Budget</span>
@@ -339,10 +375,10 @@
                     </div>
                 </div>
                 <div id="budget-progress"></div>
-            </section>
+            </details>
 
-            <section class="panel" aria-labelledby="recurring-title">
-                <h2 id="recurring-title" data-i18n="recurring.title">Recurring Transactions</h2>
+            <details class="panel">
+                <summary><h2 id="recurring-title" data-i18n="recurring.title">Recurring Transactions</h2></summary>
                 <div class="grid">
                     <label>
                         <span data-i18n="recurring.name">Name</span>
@@ -383,7 +419,7 @@
                     <label class="btn file"><input type="file" id="rec-import" accept=".csv" /> <span>Import Recurring CSV</span></label>
                 </div>
                 <ul id="rec-list"></ul>
-            </section>
+            </details>
     </main>
 
     <footer class="app-footer">
@@ -395,6 +431,20 @@
     </footer>
 
         <div id="live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+        <!-- Confirm Dialog (replaces browser confirm()) -->
+        <dialog id="confirm-dialog" class="confirm-dialog">
+            <div class="confirm-body">
+                <div class="confirm-icon">
+                    <svg class="icon icon-xl"><use xlink:href="#icon-trash"/></svg>
+                </div>
+                <p id="confirm-message">Are you sure?</p>
+            </div>
+            <div class="confirm-actions">
+                <button id="confirm-cancel" class="btn">Cancel</button>
+                <button id="confirm-ok" class="btn danger">Confirm</button>
+            </div>
+        </dialog>
 
         <!-- Profile Dialog -->
         <dialog id="auth-dialog" aria-label="Profile" class="profile-dialog">
@@ -433,10 +483,10 @@
                     </div>
                 </div>
 
-                <!-- Cloud Sign-In Section -->
+                <!-- Google Account Section -->
                 <div class="profile-section">
-                    <h4 data-i18n="auth.cloud.title">Cloud Sync</h4>
-                    <p class="section-desc" data-i18n="auth.cloud.desc">Sign in to sync your data across devices</p>
+                    <h4 data-i18n="auth.cloud.title">Google Account</h4>
+                    <p class="section-desc" data-i18n="auth.cloud.desc">Sign in with Google to use as your profile. Data stays on this device.</p>
                     <div class="actions">
                         <button id="btn-google-signin" type="button">
                             <svg class="icon"><use xlink:href="#icon-google"/></svg>

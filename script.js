@@ -62,6 +62,19 @@ const recList = document.getElementById('rec-list');
 const monthsBackEl = document.getElementById('months-back');
 let chartMonth;
 
+// Pagination
+const paginationEl = document.getElementById('pagination');
+const pagePrevBtn = document.getElementById('page-prev');
+const pageNextBtn = document.getElementById('page-next');
+const pageInfoEl = document.getElementById('page-info');
+const txCountEl = document.getElementById('tx-count');
+let currentPage = 1;
+const PAGE_SIZE = 25;
+
+// Sorting
+let sortColumn = 'date';
+let sortDirection = 'desc'; // 'asc' or 'desc'
+
 // State
 let tx = []; // {id, type: 'income'|'expense', name, amount, category, date, notes}
 let editId = null;
@@ -119,6 +132,7 @@ const i18n = {
         'form.date': 'Date',
         'form.notes': 'Notes',
         'form.add': 'Add',
+        'form.update': 'Update',
         'form.reset': 'Reset',
         'filters.title': 'Filters',
         'filters.type': 'Type',
@@ -167,8 +181,8 @@ const i18n = {
     , 'auth.local.desc': 'Manage multiple profiles on this device'
     , 'auth.local.current': 'Current Profile'
     , 'auth.local.orcreate': 'or create new'
-    , 'auth.cloud.title': 'Cloud Sync'
-    , 'auth.cloud.desc': 'Sign in to sync your data across devices'
+    , 'auth.cloud.title': 'Google Account'
+    , 'auth.cloud.desc': 'Sign in with Google to use as your profile. Data stays on this device.'
     , 'auth.cloud.signin': 'Sign in with Google'
     , 'auth.cloud.signout': 'Sign out'
     , 'empty.tx': 'No transactions yet. Add one above to get started!'
@@ -207,6 +221,7 @@ const i18n = {
         'form.date': 'Fecha',
         'form.notes': 'Notas',
         'form.add': 'Agregar',
+        'form.update': 'Actualizar',
         'form.reset': 'Limpiar',
         'filters.title': 'Filtros',
         'filters.type': 'Tipo',
@@ -255,8 +270,8 @@ const i18n = {
     , 'auth.local.desc': 'Administra múltiples perfiles en este dispositivo'
     , 'auth.local.current': 'Perfil actual'
     , 'auth.local.orcreate': 'o crear nuevo'
-    , 'auth.cloud.title': 'Sincronización en la nube'
-    , 'auth.cloud.desc': 'Inicia sesión para sincronizar tus datos entre dispositivos'
+    , 'auth.cloud.title': 'Cuenta de Google'
+    , 'auth.cloud.desc': 'Inicia sesión con Google como tu perfil. Los datos permanecen en este dispositivo.'
     , 'auth.cloud.signin': 'Iniciar sesión con Google'
     , 'auth.cloud.signout': 'Cerrar sesión'
     , 'empty.tx': 'Aún no hay transacciones. ¡Agrega una arriba para comenzar!'
@@ -295,6 +310,7 @@ const i18n = {
         'form.date': 'Date',
         'form.notes': 'Notes',
         'form.add': 'Ajouter',
+        'form.update': 'Mettre à jour',
         'form.reset': 'Réinitialiser',
         'filters.title': 'Filtres',
         'filters.type': 'Type',
@@ -343,8 +359,8 @@ const i18n = {
     , 'auth.local.desc': 'Gérez plusieurs profils sur cet appareil'
     , 'auth.local.current': 'Profil actuel'
     , 'auth.local.orcreate': 'ou créer un nouveau'
-    , 'auth.cloud.title': 'Synchronisation cloud'
-    , 'auth.cloud.desc': 'Connectez-vous pour synchroniser vos données sur vos appareils'
+    , 'auth.cloud.title': 'Compte Google'
+    , 'auth.cloud.desc': 'Connectez-vous avec Google comme profil. Les données restent sur cet appareil.'
     , 'auth.cloud.signin': 'Se connecter avec Google'
     , 'auth.cloud.signout': 'Se déconnecter'
     , 'empty.tx': 'Aucune transaction pour le moment. Ajoutez-en une ci-dessus pour commencer !'
@@ -383,6 +399,7 @@ const i18n = {
         'form.date': 'Datum',
         'form.notes': 'Notizen',
         'form.add': 'Hinzufügen',
+        'form.update': 'Aktualisieren',
         'form.reset': 'Zurücksetzen',
         'filters.title': 'Filter',
         'filters.type': 'Art',
@@ -431,8 +448,8 @@ const i18n = {
     , 'auth.local.desc': 'Verwalten Sie mehrere Profile auf diesem Gerät'
     , 'auth.local.current': 'Aktuelles Profil'
     , 'auth.local.orcreate': 'oder neues erstellen'
-    , 'auth.cloud.title': 'Cloud-Synchronisierung'
-    , 'auth.cloud.desc': 'Melden Sie sich an, um Ihre Daten geräteübergreifend zu synchronisieren'
+    , 'auth.cloud.title': 'Google-Konto'
+    , 'auth.cloud.desc': 'Melden Sie sich mit Google als Profil an. Daten bleiben auf diesem Gerät.'
     , 'auth.cloud.signin': 'Mit Google anmelden'
     , 'auth.cloud.signout': 'Abmelden'
     , 'empty.tx': 'Noch keine Transaktionen. Fügen Sie oben eine hinzu, um zu beginnen!'
@@ -471,6 +488,7 @@ const i18n = {
         'form.date': 'Data',
         'form.notes': 'Observações',
         'form.add': 'Adicionar',
+        'form.update': 'Atualizar',
         'form.reset': 'Limpar',
         'filters.title': 'Filtros',
         'filters.type': 'Tipo',
@@ -519,8 +537,8 @@ const i18n = {
     , 'auth.local.desc': 'Gerencie vários perfis neste dispositivo'
     , 'auth.local.current': 'Perfil atual'
     , 'auth.local.orcreate': 'ou criar novo'
-    , 'auth.cloud.title': 'Sincronização na nuvem'
-    , 'auth.cloud.desc': 'Faça login para sincronizar seus dados entre dispositivos'
+    , 'auth.cloud.title': 'Conta Google'
+    , 'auth.cloud.desc': 'Entre com Google como seu perfil. Os dados ficam neste dispositivo.'
     , 'auth.cloud.signin': 'Entrar com Google'
     , 'auth.cloud.signout': 'Sair'
     , 'empty.tx': 'Ainda não há transações. Adicione uma acima para começar!'
@@ -559,6 +577,7 @@ const i18n = {
         'form.date': 'तारीख',
         'form.notes': 'टिप्पणी',
         'form.add': 'जोड़ें',
+        'form.update': 'अपडेट करें',
         'form.reset': 'रीसेट',
         'filters.title': 'फ़िल्टर',
         'filters.type': 'प्रकार',
@@ -607,8 +626,8 @@ const i18n = {
     , 'auth.local.desc': 'इस डिवाइस पर कई प्रोफाइल प्रबंधित करें'
     , 'auth.local.current': 'वर्तमान प्रोफाइल'
     , 'auth.local.orcreate': 'या नया बनाएं'
-    , 'auth.cloud.title': 'क्लाउड सिंक'
-    , 'auth.cloud.desc': 'डिवाइसों में डेटा सिंक करने के लिए साइन इन करें'
+    , 'auth.cloud.title': 'Google खाता'
+    , 'auth.cloud.desc': 'अपनी प्रोफ़ाइल के रूप में Google से साइन इन करें। डेटा इस डिवाइस पर रहता है।'
     , 'auth.cloud.signin': 'Google से साइन इन करें'
     , 'auth.cloud.signout': 'साइन आउट'
     , 'empty.tx': 'अभी तक कोई लेन-देन नहीं। शुरू करने के लिए ऊपर एक जोड़ें!'
@@ -707,19 +726,69 @@ function applyFilters(list) {
 // Render table and summaries
 function render() {
     refreshCategorySuggestions();
-    const list = applyFilters(tx).sort((a,b) => (b.date||'').localeCompare(a.date||''));
-    tbody.innerHTML = '';
+    let list = applyFilters(tx);
+    
+    // Sort
+    list.sort((a, b) => {
+        let va, vb;
+        switch (sortColumn) {
+            case 'date': va = a.date || ''; vb = b.date || ''; break;
+            case 'type': va = a.type || ''; vb = b.type || ''; break;
+            case 'category': va = (a.category || '').toLowerCase(); vb = (b.category || '').toLowerCase(); break;
+            case 'name': va = (a.name || '').toLowerCase(); vb = (b.name || '').toLowerCase(); break;
+            case 'amount': 
+                va = a.type === 'expense' ? -a.amount : a.amount;
+                vb = b.type === 'expense' ? -b.amount : b.amount;
+                break;
+            default: va = a.date || ''; vb = b.date || '';
+        }
+        const cmp = sortColumn === 'amount' ? va - vb : String(va).localeCompare(String(vb));
+        return sortDirection === 'asc' ? cmp : -cmp;
+    });
+    
+    // Compute totals from full filtered list (before pagination)
     let income = 0, expenses = 0;
+    list.forEach(t => {
+        if (t.type === 'income') income += t.amount; else expenses += t.amount;
+    });
+    
+    // Update sort indicators
+    document.querySelectorAll('th.sortable').forEach(th => {
+        th.classList.remove('sort-asc', 'sort-desc');
+        if (th.dataset.sort === sortColumn) {
+            th.classList.add(sortDirection === 'asc' ? 'sort-asc' : 'sort-desc');
+        }
+    });
+    
+    // Transaction count
+    if (txCountEl) {
+        txCountEl.textContent = list.length > 0 ? `${list.length} transaction${list.length !== 1 ? 's' : ''}` : '';
+    }
+    
+    // Pagination
+    const totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+    if (currentPage > totalPages) currentPage = totalPages;
+    const startIdx = (currentPage - 1) * PAGE_SIZE;
+    const pageList = list.slice(startIdx, startIdx + PAGE_SIZE);
+    
+    // Show/hide pagination
+    if (paginationEl) {
+        paginationEl.hidden = list.length <= PAGE_SIZE;
+        if (pagePrevBtn) pagePrevBtn.disabled = currentPage <= 1;
+        if (pageNextBtn) pageNextBtn.disabled = currentPage >= totalPages;
+        if (pageInfoEl) pageInfoEl.textContent = `Page ${currentPage} of ${totalPages}`;
+    }
+    
+    tbody.innerHTML = '';
     
     if (list.length === 0) {
         const dict = getDict();
         tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:48px 20px;"><div class="empty-state"><div class="empty-state-icon"><svg class="icon icon-xl"><use xlink:href="#icon-wallet"/></svg></div><div class="empty-state-text">${escapeHtml(dict['empty.tx']||'No transactions yet. Add one above to get started!')}</div><div style="margin-top:12px;"><button id="empty-add" class="btn primary">${escapeHtml(dict['cta.addTx']||'Add a transaction')}</button></div></div></td></tr>`;
         setTimeout(()=>{ document.getElementById('empty-add')?.addEventListener('click', ()=>{ document.getElementById('add-title')?.scrollIntoView({behavior:'smooth', block:'start'}); nameInput?.focus({preventScroll:true}); }); },0);
     } else {
-        list.forEach(t => {
-            if (t.type === 'income') income += t.amount; else expenses += t.amount;
+        pageList.forEach(t => {
             const tr = document.createElement('tr');
-            const catColor = (t.category && catColors[t.category]) || '';
+            const catColor = sanitizeColor((t.category && catColors[t.category]) || '');
             tr.innerHTML = `
                 <td>${t.date || ''}</td>
                 <td><span class="badge ${t.type}">${t.type}</span></td>
@@ -728,16 +797,24 @@ function render() {
                 <td class="num">${format(t.type === 'expense' ? -t.amount : t.amount)}</td>
                 <td>
                     <div class="row-actions">
-                        <button class="icon-btn" data-action="edit" data-id="${t.id}"><svg class="icon icon-sm"><use xlink:href="#icon-edit"/></svg> Edit</button>
-                        <button class="icon-btn danger" data-action="del" data-id="${t.id}"><svg class="icon icon-sm"><use xlink:href="#icon-trash"/></svg> Delete</button>
+                        <button class="icon-btn" data-action="edit" data-id="${t.id}" title="Edit"><svg class="icon icon-sm"><use xlink:href="#icon-edit"/></svg></button>
+                        <button class="icon-btn danger" data-action="del" data-id="${t.id}" title="Delete"><svg class="icon icon-sm"><use xlink:href="#icon-trash"/></svg></button>
                     </div>
                 </td>`;
             tbody.appendChild(tr);
         });
     }
     sumIncomeEl.textContent = format(income);
-    sumExpensesEl.textContent = format(-expenses);
-    sumBalanceEl.textContent = format(income - expenses);
+    sumIncomeEl.style.color = income > 0 ? 'var(--ok)' : '';
+    sumExpensesEl.textContent = format(expenses > 0 ? -expenses : 0);
+    sumExpensesEl.style.color = expenses > 0 ? 'var(--danger)' : '';
+    const bal = income - expenses;
+    sumBalanceEl.textContent = format(bal);
+    sumBalanceEl.style.color = bal > 0 ? 'var(--ok)' : bal < 0 ? 'var(--danger)' : '';
+    
+    // Trend indicators (this month vs last month)
+    updateTrends();
+    
     try { if (window.Chart) { drawChart(); } } catch (e) { console.warn('drawChart failed', e); }
     try { if (typeof drawMonthlyChart === 'function') { drawMonthlyChart(); } } catch (e) { console.warn('drawMonthlyChart failed', e); }
     try { renderBudgets?.(); } catch (e) { console.warn('renderBudgets failed', e); }
@@ -745,7 +822,47 @@ function render() {
 }
 
 function escapeHtml(str) {
-    return (str || '').replace(/[&<>"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s]));
+    return (str || '').replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'": '&#39;'}[s]));
+}
+
+// Trend indicators (this month vs last month)
+function updateTrends() {
+    const now = new Date();
+    const thisMonth = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+    const prevDate = new Date(now.getFullYear(), now.getMonth()-1, 1);
+    const lastMonth = `${prevDate.getFullYear()}-${String(prevDate.getMonth()+1).padStart(2,'0')}`;
+    
+    let thisInc = 0, thisExp = 0, lastInc = 0, lastExp = 0;
+    tx.forEach(t => {
+        if (!t.date) return;
+        const m = t.date.slice(0,7);
+        if (m === thisMonth) { t.type === 'income' ? thisInc += t.amount : thisExp += t.amount; }
+        if (m === lastMonth) { t.type === 'income' ? lastInc += t.amount : lastExp += t.amount; }
+    });
+    
+    const renderTrend = (elId, current, previous, invertColor) => {
+        const el = document.getElementById(elId);
+        if (!el) return;
+        if (previous === 0 && current === 0) { el.textContent = ''; return; }
+        if (previous === 0) { el.innerHTML = '<span class="trend-new">new this month</span>'; return; }
+        const pct = ((current - previous) / previous * 100);
+        const arrow = pct > 0 ? '↑' : pct < 0 ? '↓' : '→';
+        const color = pct === 0 ? 'var(--subtext)' : 
+            (invertColor ? (pct > 0 ? 'var(--danger)' : 'var(--ok)') : (pct > 0 ? 'var(--ok)' : 'var(--danger)'));
+        el.innerHTML = `<span style="color:${color}">${arrow} ${Math.abs(pct).toFixed(0)}% vs last month</span>`;
+    };
+    
+    renderTrend('trend-income', thisInc, lastInc, false);
+    renderTrend('trend-expenses', thisExp, lastExp, true);
+    renderTrend('trend-balance', thisInc - thisExp, lastInc - lastExp, false);
+}
+
+// Sanitize color values to prevent style injection
+function sanitizeColor(color) {
+    if (!color) return '';
+    // Only allow valid hex colors
+    if (/^#[0-9a-fA-F]{3,8}$/.test(color)) return color;
+    return '';
 }
 
 // Toast notification
@@ -848,17 +965,18 @@ form.addEventListener('submit', (e) => {
     if (editId) { 
         updateTx(editId, data); 
         editId = null; 
-    document.getElementById('submit-btn').textContent = getDict()['form.add']; 
+    document.getElementById('submit-btn').textContent = getDict()['form.add'] || 'Add'; 
     showToast(getDict()['toast.updated']||'Transaction updated!');
     }
     else { 
     addTx(data); 
+    currentPage = 1;
     showToast(getDict()['toast.added']||'Transaction added!');
     }
     form.reset();
 });
 
-resetBtn.addEventListener('click', () => { form.reset(); editId = null; document.getElementById('submit-btn').textContent = getDict()['form.add']; });
+resetBtn.addEventListener('click', () => { form.reset(); editId = null; document.getElementById('submit-btn').textContent = getDict()['form.add'] || 'Add'; });
 
 tbody.addEventListener('click', (e) => {
     const btn = e.target.closest('button');
@@ -866,8 +984,9 @@ tbody.addEventListener('click', (e) => {
     const id = btn.getAttribute('data-id');
     const act = btn.getAttribute('data-action');
     if (act === 'del') { 
-    removeTx(id); 
-    showToast(getDict()['toast.deleted']||'Transaction deleted', 'error');
+        showConfirm('Delete this transaction?').then(ok => {
+            if (ok) { removeTx(id); showToast(getDict()['toast.deleted']||'Transaction deleted', 'error'); }
+        });
     }
     if (act === 'edit') {
         const t = tx.find(x => x.id === id);
@@ -879,13 +998,46 @@ tbody.addEventListener('click', (e) => {
         categoryInput.value = t.category || '';
         dateInput.value = t.date || '';
         notesInput.value = t.notes || '';
-        document.getElementById('submit-btn').textContent = getDict()['form.add'].replace('Add','Update');
-        nameInput.focus();
+        document.getElementById('submit-btn').textContent = getDict()['form.update'] || 'Update';
+        document.getElementById('add-title')?.scrollIntoView({behavior:'smooth', block:'start'});
+        nameInput.focus({preventScroll:true});
     }
 });
 
-[filterType, filterCategory, filterFrom, filterTo, filterSearch].forEach(el => el.addEventListener('input', render));
-filterClearCategoryBtn?.addEventListener('click', () => { filterCategory.value = ''; render(); });
+[filterType, filterCategory, filterFrom, filterTo, filterSearch].forEach(el => el.addEventListener('input', () => { currentPage = 1; render(); }));
+filterClearCategoryBtn?.addEventListener('click', () => { filterCategory.value = ''; currentPage = 1; render(); });
+
+// Pagination controls
+pagePrevBtn?.addEventListener('click', () => { if (currentPage > 1) { currentPage--; render(); document.getElementById('list-title')?.scrollIntoView({behavior:'smooth', block:'start'}); } });
+pageNextBtn?.addEventListener('click', () => { currentPage++; render(); document.getElementById('list-title')?.scrollIntoView({behavior:'smooth', block:'start'}); });
+
+// Table sorting (click headers)
+document.querySelector('.table thead')?.addEventListener('click', (e) => {
+    const th = e.target.closest('th.sortable');
+    if (!th) return;
+    const col = th.dataset.sort;
+    if (sortColumn === col) { sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'; }
+    else { sortColumn = col; sortDirection = col === 'date' ? 'desc' : 'asc'; }
+    currentPage = 1;
+    render();
+});
+
+// Custom confirm dialog
+function showConfirm(message) {
+    return new Promise(resolve => {
+        const dialog = document.getElementById('confirm-dialog');
+        const msgEl = document.getElementById('confirm-message');
+        const okBtn = document.getElementById('confirm-ok');
+        const cancelBtn = document.getElementById('confirm-cancel');
+        if (!dialog) { resolve(confirm(message)); return; }
+        msgEl.textContent = message;
+        const cleanup = (result) => { dialog.close(); resolve(result); };
+        okBtn.onclick = () => cleanup(true);
+        cancelBtn.onclick = () => cleanup(false);
+        dialog.oncancel = () => cleanup(false);
+        dialog.showModal();
+    });
+}
 
 langSelect.addEventListener('change', () => { applyI18n(); store.save(); });
 localeSelect?.addEventListener('change', () => { render(); store.save(); });
@@ -1037,14 +1189,17 @@ function parseCsvLine(line) {
 }
 
 clearBtn?.addEventListener('click', () => {
-    if (confirm('Clear all data?')) {
-        tx = [];
-        budgets = { total: 0, cats: {} };
-        recurring = [];
-        store.save();
-        render();
-        showToast('All data cleared', 'error');
-    }
+    showConfirm('Clear all data? This cannot be undone.').then(ok => {
+        if (ok) {
+            tx = [];
+            budgets = { total: 0, cats: {} };
+            recurring = [];
+            store.save();
+            currentPage = 1;
+            render();
+            showToast('All data cleared', 'error');
+        }
+    });
 });
 
 // Budgets state and UI
@@ -1302,7 +1457,7 @@ profileSelect?.addEventListener('change', (e) => {
         loadProfile(next);
         authDialog?.close?.();
         document.body.style.overflow = '';
-        toast('Profile switched');
+        showToast(getDict()['toast.profile.switched'] || 'Profile switched');
     }
 });
 
@@ -1420,6 +1575,15 @@ installBtn?.addEventListener('click', async () => {
     installBtn.style.display = 'none';
 });
 
+// Settings drawer toggle
+const settingsToggle = document.getElementById('btn-settings-toggle');
+const settingsDrawer = document.getElementById('settings-drawer');
+settingsToggle?.addEventListener('click', () => {
+    const isOpen = !settingsDrawer.hidden;
+    settingsDrawer.hidden = isOpen;
+    settingsToggle.setAttribute('aria-expanded', String(!isOpen));
+});
+
 // Init
 yearEl.textContent = new Date().getFullYear();
 store.load();
@@ -1457,10 +1621,5 @@ function checkStorageQuota() {
     }
 }
 
-// Check quota on load and after major operations
+// Check quota on load
 checkStorageQuota();
-const originalSave = store.save;
-store.save = function() {
-    originalSave.call(store);
-    checkStorageQuota();
-};

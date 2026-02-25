@@ -1,103 +1,68 @@
-# 🧾 Expense Tracker
+# Expense Tracker
 
-> A modern, privacy-focused expense tracker that runs entirely in your browser. No backend, no sign-up required, your data stays with you.
+A personal finance tracker that runs in your browser. No account needed — your data stays on your device in localStorage.
 
-🔗 **[Live Demo](https://lazerai-expense.vercel.app)** | 📱 **[Install as PWA](https://lazerai-expense.vercel.app)**
+**Live app:** [et-lazerai.vercel.app](https://et-lazerai.vercel.app/)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![PWA](https://img.shields.io/badge/PWA-enabled-brightgreen.svg)](https://web.dev/progressive-web-apps/)
-[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black.svg)](https://lazerai-expense.vercel.app)
+## What it does
 
-## ✨ Features
+- Track income and expenses by category
+- Set monthly budgets (total + per-category) with progress bars
+- Recurring transactions (daily/weekly/monthly)
+- Charts for spending breakdown and monthly trends (Chart.js)
+- Filter and search transactions
+- CSV import/export for everything
+- Multiple local profiles
+- Optional Google sign-in (Firebase Auth)
+- 6 languages, 8 currencies, dark/light theme
+- Works offline as a PWA
 
-- 📊 **Track Income & Expenses** - Categorized transactions with notes and dates
-- 💰 **Budget Management** - Set monthly budgets and track spending by category
-- 🔄 **Recurring Transactions** - Automate daily, weekly, or monthly transactions
-- 📈 **Visual Analytics** - Beautiful charts showing spending by category and monthly trends
-- 🌍 **Multi-Language** - 6 languages (EN/ES/FR/DE/PT/HI) with 8 currency options
-- 🎨 **Dark/Light Theme** - Smooth theme toggle with system preference support
-- 📱 **PWA Ready** - Install on any device, works offline
-- 🔒 **Privacy First** - All data stored locally in your browser (localStorage)
-- ☁️ **Optional Cloud Sync** - Sign in with Google to sync across devices (via Firebase)
-- 📤 **CSV Export/Import** - Take your data anywhere
+## Run it
 
-## 🚀 Quick Start
+Open `index.html` in a browser. That's it — no build step, no dependencies to install.
 
-### Run Locally
-Simply open `index.html` in your browser. No build process needed!
+To deploy:
 
-### Try the Demo
-Click **"Load Sample"** in the header to populate with demo data.
-
-### Deploy to Vercel
 ```bash
 vercel --prod
 ```
 
-Or deploy to Netlify, GitHub Pages, or any static host.
+Or drop the files on any static host (Netlify, GitHub Pages, Cloudflare Pages, etc).
 
-## 🛠️ Tech Stack
+## How data is stored
 
-- **Vanilla JavaScript** - Zero dependencies (except Chart.js for visualization)
-- **Chart.js** - Beautiful, responsive charts
-- **Firebase Auth** - Optional Google Sign-In for cloud sync
-- **Service Worker** - Offline support and caching
-- **CSS Variables** - Easy theme customization
+Everything goes into `localStorage` in your browser. There's no backend, no database, no tracking. If you sign in with Google, Firebase Auth handles authentication but your financial data still lives locally.
 
-## 📖 Documentation
+The 5-10MB localStorage limit is plenty for personal use. You can export to CSV anytime as a backup.
 
-### Data Storage
-- **Local**: All data stored in browser `localStorage` (5-10MB limit)
-- **Cloud**: Optional Firebase Firestore sync when signed in
-- **Export**: Backup data anytime via CSV export
+## Project structure
 
-### Customization
-- **Languages**: Edit `i18n` object in `script.js`
-- **Currencies**: Modify `currencySelect` options in `index.html`
-- **Styling**: Adjust CSS variables at the top of `styles.css`
-- **Categories**: Add transactions to generate category suggestions
-
-### Privacy & Legal
-- [Privacy Policy](privacy.html) - How we handle your data
-- [Terms of Service](terms.html) - Usage terms and disclaimers
-
-## 📁 Project Structure
-
-```
-expense-tracker/
-├── index.html           # Main app page
-├── script.js            # Core application logic
-├── styles.css           # All styling
-├── auth.js              # Firebase authentication
-├── service-worker.js    # PWA offline support
-├── icons.svg            # SVG icon sprite
-├── manifest.webmanifest # PWA manifest
-├── privacy.html         # Privacy policy
-├── terms.html           # Terms of service
-└── data/                # Sample CSV files
-    ├── sample-transactions.csv
-    ├── sample-budgets.csv
-    └── sample-recurring.csv
+```text
+index.html            Main app (single page)
+script.js             All app logic, i18n strings, state management
+styles.css            Styling + dark/light theme via CSS variables
+auth.js               Firebase Auth (optional Google sign-in)
+service-worker.js     PWA offline caching
+manifest.webmanifest  PWA install config
+privacy.html          Privacy policy
+terms.html            Terms of service
+data/                 Sample CSV files for demo
 ```
 
-## 🤝 Contributing
+## Customization
 
-Contributions are welcome! Feel free to:
-- Report bugs via [Issues](https://github.com/LAZERAI/expense-tracker/issues)
-- Submit pull requests with improvements
-- Suggest new features or translations
+- **Languages:** Edit the `i18n` object in `script.js`
+- **Currencies:** Modify the currency `<select>` options in `index.html`
+- **Theme colors:** Change CSS variables at the top of `styles.css`
+- **Categories:** They auto-populate from your transaction history
 
-## 📄 License
+## Contributing
 
-MIT License - feel free to use this project for personal or commercial purposes.
+Open an [issue](https://github.com/LAZERAI/expense-tracker/issues) or submit a PR. Bug reports, feature ideas, and translations are all welcome.
 
-## 💖 Support
+## License
 
-If you find this useful, consider:
-- ⭐ Starring the repo
-- 🐛 Reporting bugs
-- 💡 Suggesting features
-- ☕ [Buy me a coffee](https://www.buymeacoffee.com/lazerai)
+MIT
 
 ---
 
